@@ -93,7 +93,7 @@ public class Main {
     }
 
     //--------------------------
-    public static int mainMenu() {
+   /* public static int mainMenu() {
         System.out.println("ـــــــــــــ");
         System.out.println("1. Products");
         System.out.println("2. Customers");
@@ -103,7 +103,7 @@ public class Main {
         System.out.println("Enter your choice:");
 
         return input.nextInt();
-    }
+    }*/
 //--------------------------
 
    public static void productsMenu() {

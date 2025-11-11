@@ -241,7 +241,29 @@ public class productsManager {
 
       
       
+    
     public void Out_Of_Stock_Products() {
+    if (products.empty()) {
+        System.out.println("empty Products data");
+    } else {
+        boolean foundOutOfStock = false; 
+        products.findFirst();
+        for (int i = 0; i < products.size(); i++) {
+            if (products.retrieve().getStock() == 0) {
+                System.out.println(products.retrieve());
+                foundOutOfStock = true; 
+            }
+            products.findNext();
+        }
+        
+        
+        if (!foundOutOfStock) {
+            System.out.println("No products are out of stock.");
+        }
+    }
+}
+
+    /*public void Out_Of_Stock_Products() {
         if (products.empty()) {
             System.out.println("empty Products data");
         } else {
@@ -252,7 +274,7 @@ public class productsManager {
                 products.findNext();
             }
         }
-    }
+    }*/
 
     //========================================================added method 
     public boolean checkProductID(int PID) {
