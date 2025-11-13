@@ -109,7 +109,7 @@ public class productsManager {
     } else {
         System.out.println("Enter product Name: ");
         String name = input.nextLine();
-        name = input.nextLine(); 
+        //name = input.nextLine(); //
         
         boolean found = false;
         
@@ -304,3 +304,4 @@ public class productsManager {
         return null;
     }
 }
+///////updated
