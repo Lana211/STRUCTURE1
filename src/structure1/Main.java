@@ -144,8 +144,6 @@ public class Main {
                Product pro = pdata.searchProducName();
                 if (pro != null) {
                     System.out.println("Product found: " + pro);
-                } else {
-                    System.out.println("No product found with the given Name.");
                 }
                 break;
             }else if (choice == 6) {
@@ -175,62 +173,72 @@ public class Main {
     System.out.println("1. Add a new review");
     System.out.println("2. Edit an existing review");
     System.out.println("3. Get the average rating for a product");
-    System.out.println("4. Top 3 products");
-    System.out.println("5. Common products");
+    System.out.println("4. Top 3 products");//by average rating
+    System.out.println("5. Common products with rating > 4");
     System.out.println("6. Return to Main menu");
     System.out.print("Enter your choice: ");
 
-    try {
-        
-        choice = input.nextInt();
+        try {
 
-        while (true) {
-            if (choice == 1) {
-                addReviewPrompt();
-                break;
-            } else if (choice == 2) {
-                rdata.updateReview();
-                break;
-            } else if (choice == 3) {
-                System.out.print("Enter product ID to get an average rating: ");
-                int pid = input.nextInt();
+            choice = input.nextInt();
 
-                while (!pdata.checkProductID(pid)) {
-                    System.out.println("The product ID is invalid. Please try again:");
-                    pid = input.nextInt();
+            while (true) {
+                if (choice == 1) {
+                    addReviewPrompt();
+                    break;
+                } else if (choice == 2) {
+                    rdata.updateReview();
+                    break;
+                } else if (choice == 3) {
+                    System.out.print("Enter product ID to get an average rating: ");
+                    int pid = input.nextInt();
+
+                    while (!pdata.checkProductID(pid)) {
+                        System.out.println("The product ID is invalid. Please try again:");
+                        pid = input.nextInt();
+                    }
+                    float AVG = avgRating(pid);
+                    System.out.println("The average rating for product ID " + pid + " is: " + AVG);
+                    break;
+                } else if (choice == 4) {
+                    top3Products();
+                    break;
+                } else if (choice == 5) {
+
+                    System.out.print("Enter the first customer's ID: ");
+                    Customers cid1 = cdata.getCustomersId();
+
+                    System.out.print("Enter the second customer's ID: ");
+                    Customers cid2 = cdata.getCustomersId();
+
+                    // shouldn't continue
+                    if (cid1 == null || cid2 == null) {
+                        System.out.println("One or both customers not found. Returning to menu...");
+                        break;
+                    }
+
+                    // both customers exist at this point
+                    commonProducts(cid1.getCustomerID(), cid2.getCustomerID());
+                    break;
+                } else if (choice == 6) {
+                    System.out.println("Returning to Main menu...");
+                    break;
+                } else {
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
                 }
-                float AVG = avgRating(pid);
-                System.out.println("The average rating for product ID " + pid + " is: " + AVG);
-                break;
-            } else if (choice == 4) {
-                top3Products();
-                break;
-            } else if (choice == 5) {
-                System.out.print("Enter the first customer's ID: ");
-                Customers cid1 = cdata.getCustomersId();
-                System.out.print("Enter the second customer's ID: ");
-                Customers cid2 = cdata.getCustomersId();
-                commonProducts(cid1.getCustomerID(), cid2.getCustomerID());
-                break;
-            } else if (choice == 6) {
-                System.out.println("Returning to Main menu...");
-                break;
-            } else {
-                System.out.println("Invalid choice. Please try again.");
-                break;
             }
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Invalid input! Please enter a valid number.");
+            input.nextLine();  // Clear the invalid input from the buffer
         }
-    } catch (java.util.InputMismatchException e) {
-        System.out.println("Invalid input! Please enter a valid number.");
-        input.nextLine();  // Clear the invalid input from the buffer
     }
-}
 
 //--------------------------
     public static void addReviewPrompt() {
         System.out.print("Enter the Customer ID: ");
         int customerId = input.nextInt();
-        while (!cdata.check(customerId)) {
+        while (!cdata.check(customerId)) {// updated (check)
             System.out.println("Customer ID not available. Please enter again:");
             customerId = input.nextInt();
         }
