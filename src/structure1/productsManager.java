@@ -41,21 +41,21 @@ public class productsManager {
 
    
     public void addProduct() {
-        System.out.println("Enter data productID:");
+        System.out.println("Enter product ID:");
         int pId = input.nextInt();
         while (checkProductID(pId)) {
-            System.out.println("Re-Enter productID again , number already taken:");
+           System.out.println("This product ID is already taken. Please enter another one:");
             pId = input.nextInt();
         }
 
-        System.out.println("product Name:");
+        System.out.println("Enter product Name:");
         String name = input.next();
 
         
         System.out.println("price:");
         double price = input.nextDouble();
         while (price < 0) {
-            System.out.println("Price cannot be negative. Enter again:");
+           System.out.println("Invalid price. Please enter a non-negative value:");
             price = input.nextDouble();
         }
 
@@ -63,7 +63,7 @@ public class productsManager {
         System.out.println("stock:");
         int stock = input.nextInt();
         while (stock < 0) {
-            System.out.println("Stock cannot be negative. Enter again:");
+            System.out.println("Invalid stock value. Please enter a non-negative number:");
             stock = input.nextInt();
         }
 
@@ -76,7 +76,7 @@ public class productsManager {
     
     public Product searchProducID() {
         if (products.empty()) {
-            System.out.println("empty Products data");
+            System.out.println("Empty Products data");
             
         } else {
             System.out.println("Enter product ID: ");
@@ -170,74 +170,80 @@ public class productsManager {
 
        
     public Product updateProduct() {
-        if (products.empty()) {
-            System.out.println("empty Products data");
-        } else {
-            System.out.println("Enter product ID: ");
-            int productID = input.nextInt();
+    if (products.empty()) {
+        System.out.println("empty Products data");
+        return null;
+    }
 
-            boolean found = false;
+    System.out.println("Enter product ID: ");
+    int productID = input.nextInt();
 
-            products.findFirst();
-            while (!products.last()) {
-                if (products.retrieve().getProductId() == productID) {
-                    found = true;
-                    break;
-                }
-                products.findNext();
-            }
-            if (products.retrieve().getProductId() == productID)
-                found = true;
+    boolean found = false;
 
-            if (found) {
-                Product p = products.retrieve();
-                products.remove();
-
-                System.out.println("1. Update Name");
-                System.out.println("2. Update price");
-                System.out.println("3. Update stock");
-                System.out.println("Enter your choice");
-                int choice = input.nextInt();
-
-                switch (choice) {
-                    case 1:
-                        System.out.println("Enter new product name:");
-                        p.setName(input.next());
-                        products.insert(p);
-                        break;
-
-                    case 2:
-                        System.out.println("Enter new product price:");
-                        double newPrice = input.nextDouble();
-                        while (newPrice < 0) {
-                            System.out.println("Price cannot be negative. Enter again:");
-                            newPrice = input.nextDouble();
-                        }
-                        p.setPrice(newPrice);
-                        products.insert(p);
-                        break;
-
-                    case 3:
-                        System.out.println("Enter new stock quantity:");
-                        int newStock = input.nextInt();
-                        while (newStock < 0) {
-                            System.out.println("Stock cannot be negative. Enter again:");
-                            newStock = input.nextInt();
-                        }
-                        p.setStock(newStock);
-                        products.insert(p);
-                        break;
-
-                    default:
-                        System.out.println("Bad Choice");
-                }
-                System.out.println("Product with ID " + productID + " has been updated successfully.");
-                return p;
-            }
+    products.findFirst();
+    while (true) {
+        if (products.retrieve().getProductId() == productID) {
+            found = true;
+            break;
         }
+
+        if (products.last()) {
+            break;
+        }
+
+        products.findNext();
+    }
+
+    if (!found) {
         System.out.println("No such product ID found");
         return null;
     }
+
+ 
+    Product p = products.retrieve();
+    products.remove();
+
+    System.out.println("1. Update Name");
+    System.out.println("2. Update price");
+    System.out.println("3. Update stock");
+    System.out.println("Enter your choice");
+    int choice = input.nextInt();
+
+    switch (choice) {
+        case 1:
+            System.out.println("Enter new product name:");
+            p.setName(input.next());
+            break;
+
+        case 2:
+            System.out.println("Enter new product price:");
+            double newPrice = input.nextDouble();
+            while (newPrice < 0) {
+                System.out.println("Price cannot be negative. Please enter a non-negative value:");
+                newPrice = input.nextDouble();
+            }
+            p.setPrice(newPrice);
+            break;
+
+        case 3:
+            System.out.println("Enter new stock quantity:");
+            int newStock = input.nextInt();
+            while (newStock < 0) {
+                System.out.println("Stock cannot be negative. Please enter a valid value:");
+                newStock = input.nextInt();
+            }
+            p.setStock(newStock);
+            break;
+
+        default:
+            System.out.println("Bad Choice");
+    }
+
+    products.insert(p);
+    System.out.println("Product with ID " + productID + " has been updated successfully.");
+    return p;
+}
+
 
       
       

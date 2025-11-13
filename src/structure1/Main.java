@@ -92,18 +92,7 @@ public class Main {
 
     }
 
-    //--------------------------
-   /* public static int mainMenu() {
-        System.out.println("ـــــــــــــ");
-        System.out.println("1. Products");
-        System.out.println("2. Customers");
-        System.out.println("3. Orders");
-        System.out.println("4. Reviews");
-        System.out.println("5. Exit");
-        System.out.println("Enter your choice:");
-
-        return input.nextInt();
-    }*/
+   
 //--------------------------
 
    public static void productsMenu() {
@@ -211,15 +200,10 @@ public class Main {
                     System.out.print("Enter the second customer's ID: ");
                     Customers cid2 = cdata.getCustomersId();
 
-                    // shouldn't continue
-                    if (cid1 == null || cid2 == null) {
-                        System.out.println("One or both customers not found. Returning to menu...");
-                        break;
-                    }
-
-                    // both customers exist at this point
+                    // both customers exist 
                     commonProducts(cid1.getCustomerID(), cid2.getCustomerID());
                     break;
+                    
                 } else if (choice == 6) {
                     System.out.println("Returning to Main menu...");
                     break;

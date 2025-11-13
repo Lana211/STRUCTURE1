@@ -77,6 +77,7 @@ customers.setCustomerID(customerID);
                 if (order.empty()) {
                     System.out.println("No orders yet");
                 } else {
+                     System.out.println("orders:");
                     order.findFirst();
                     while (!order.last()) {
                         System.out.println(order.retrieve());
@@ -111,6 +112,7 @@ customers.setCustomerID(customerID);
         if (customer.empty()) {
             return true;
         } else {
+            customer.findFirst();
             while (!customer.last()) {
                 if (customer.retrieve().getCustomerID() != customerID) {
                     customer.findNext();
@@ -127,26 +129,39 @@ customers.setCustomerID(customerID);
 
     }
 
-      public Customers getCustomersId(){
-    
-    if(customer.empty()){
+   public Customers getCustomersId() {
+
+   
+    if (customer.empty()) {
         System.out.println("No customers available");
+        return null;
     }
-    else{
-        System.out.println("enter custmer ID");
-     int customerID = input.nextInt();
-    customer.findFirst();
-       while(!customer.last()){
-        if(customer.retrieve().getCustomerID()== customerID){
-    return customer.retrieve();}
-        customer.findNext();
+
+    while (true) {
+        
+        int customerID = input.nextInt();
+
+        customer.findFirst();
+
+  
+        while (true) {
+            if (customer.retrieve().getCustomerID() == customerID) {
+              
+                return customer.retrieve();
             }
-     if(customer.retrieve().getCustomerID()== customerID)
-    return customer.retrieve();
+
+            if (customer.last()) {
+                break; 
+            }
+
+            customer.findNext();
+        }
+
+       
+        System.out.println("Customer not found, please enter a valid ID:");
+       
     }
-      System.out.println("Customer not found");
-    
-      return null;
-}  
+}
+
 
 }
