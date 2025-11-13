@@ -659,7 +659,8 @@ private static void findOrdersInDateRange() {
     System.out.println("1. Register new customer");
     System.out.println("2. Place a new order");
     System.out.println("3. View order history");
-    System.out.println("4. Return to Main menu");
+    System.out.println("4. View customer reviews");
+    System.out.println("5. Return to Main Menu");
     System.out.print("Enter your choice: ");
 
     try {
@@ -676,7 +677,10 @@ private static void findOrdersInDateRange() {
             } else if (choice == 3) {
              cdata.Ohistory ();
                 break;
-            } else if (choice == 4) {
+                } else if (choice == 4) {
+            allCustomereviews();
+                break;
+            } else if (choice == 5) {
                 System.out.println("Returning to Main menu...");
                 break;
             } else {
@@ -690,6 +694,38 @@ private static void findOrdersInDateRange() {
     }
 }
 
+public static LinkedList<Review> allCustomereviews(){
+     LinkedList<Review> review = new LinkedList<Review>();
+     System.out.print("Enter Customer ID: ");
+    int customerId = input.nextInt();
+     
+     while (cdata.check(customerId)) {
+        System.out.print("Customer doesn't exist, re-enter: ");
+        customerId = input.nextInt();
+    }
+     reviews.findFirst();
+     while(!reviews.last()){
+         if(reviews.retrieve().getCustomer()==customerId)
+             review.insert(reviews.retrieve());
+         
+         reviews.findNext();
+     }
+      if(reviews.retrieve().getCustomer()==customerId)
+             review.insert(reviews.retrieve());
+     
+      if(review.empty())
+           System.out.print("No reviews found for this customer. ");
+      else{
+          review.findFirst();
+            while( !review.last()){
+               System.out.println(review.retrieve());
+                review.findNext();
+          }
+           System.out.print(review.retrieve());
+               }
+      
+      return review;
+ }
 
     
 //-------------------------
