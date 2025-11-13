@@ -343,6 +343,7 @@ public class Main {
         }
     }
 
+
     public static void OrdersMenu() {
     System.out.println("ــــــــــ Order Menu ــــــــ");
     System.out.println("(1) Search for an Order");
@@ -357,7 +358,7 @@ System.out.println("(6) Return to Main Menu");
         int opt = input.nextInt();
         
         // Using nested if-else (different from teammate's while loop style)
-        if (opt == 1) {
+        if (opt == 1){
             searchForOrder();
         } 
         else if (opt == 2) {
@@ -380,9 +381,9 @@ System.out.println("(6) Return to Main Menu");
             System.out.println("⚠ Invalid option! Please choose 1-5.");
         }
         
-    } catch (Exception ex) {
-        System.out.println("⚠ Error: Invalid input type!");
-        input.nextLine(); // clear buffer
+    } catch (java.util.InputMismatchException e) {
+        System.out.println("Invalid input! Please enter a valid number.");
+        input.nextLine();  // Clear the invalid input from the buffer
     }
 }
 
@@ -422,91 +423,54 @@ private static void cancelAnOrder() {
     if (result == 1) {
         
         // Update customer
-        customer.findFirst();
-        int i = 0;
-        while (i < customer.size()) {
-            if (customer.retrieve().getCustomerID() == orderToCancel.getCustomerRef()) {
-                Customers c = customer.retrieve();
-                customer.remove();
-                c.removeOrder(orderToCancel.getoId());
-                customer.insert(c);
-                break;
+        if (!customer.empty()) {
+            customer.findFirst();
+            int i = 0;
+            while (i < customer.size()) {
+                if (customer.retrieve().getCustomerID() == orderToCancel.getCustomerRef()) {
+                    Customers c = customer.retrieve();
+                    customer.remove();
+                    c.removeOrder(orderToCancel.getoId());
+                    customer.insert(c);
+                    break;
+                }
+                customer.findNext();
+                i++;
             }
-            customer.findNext();
-            i++;
         }
         
         // Update stock
-        orderToCancel.getProducts().findFirst();
-        int x = 0;
-        while (x < orderToCancel.getProducts().size()) {
-            
-            products.findFirst();
-            int j = 0;
-            while (j < products.size()) {
-                if (products.retrieve().getProductId() == orderToCancel.getProducts().retrieve()) {
-                    Product p = products.retrieve();
-                    products.remove();
-                    p.addStock(1);
-                    products.insert(p);
+        if (!orderToCancel.getProducts().empty()) {
+            orderToCancel.getProducts().findFirst();
+            int x = 0;
+            while (x < orderToCancel.getProducts().size()) {
+                
+                products.findFirst();
+                int j = 0;
+                while (j < products.size()) {
+                    if (products.retrieve().getProductId() == orderToCancel.getProducts().retrieve()) {
+                        Product p = products.retrieve();
+                        products.remove();
+                        p.addStock(1);
+                        products.insert(p);
+                        break;
+                    }
+                    products.findNext();
+                    j++;
                 }
-                products.findNext();
-                j++;
+                
+                orderToCancel.getProducts().findNext();
+                x++;
             }
-            
-            orderToCancel.getProducts().findNext();
-            x++;
         }
         
         System.out.println("\nOrder (" + orderToCancel.getoId() + ") cancelled successfully");
     }
 }
 
- 
-/**
- * Update order status
- */
-private static void updateOrderStatus() {
-    System.out.print("\n→ Enter Order ID: ");
-    int orderId = input.nextInt();
-    
-    boolean updated = odata.UpdateOrder(orderId);
-    
-    if (updated) {
-        System.out.println("\n Order status modified successfully.");
-    } else {
-        System.out.println("\n Unable to modify order status.");
-    }
-}
-
-
-/**
- * Find orders within date range
- */
-private static void findOrdersInDateRange() {
-    System.out.println("\n Date Format: dd/MM/yyyy");
-    
-    System.out.print(" Enter start date: ");
-    String startDate = input.next();
-    
-    System.out.print(" Enter end date: ");
-    String endDate = input.next();
-    
-    System.out.println("\n" + "─".repeat(50));
-    System.out.println("Orders from " + startDate + " to " + endDate + ":");
-    System.out.println("─".repeat(50));
-    
-    LinkedList<Order> filteredOrders = odata.BetweenTwoDates(startDate, endDate);
-    
-    if (filteredOrders.empty()) {
-        System.out.println("No orders found in this date range.");
-    }
-    
-    System.out.println("─".repeat(50));
-}
-
-public static void placeNewOrder() {
-    Order newOrder = new Order();
+  public static void placeNewOrder()
+    {
+             Order newOrder = new Order();
     double totalAmount = 0;
     
     System.out.print("\nOrder ID: ");
@@ -532,6 +496,11 @@ public static void placeNewOrder() {
     while (addingProducts) {
         System.out.print("Product ID: ");
         int productId = input.nextInt();
+        
+        while (!pdata.checkProductID(productId)) {
+        System.out.print("Product ID: ");
+         productId = input.nextInt();
+        }
         
         boolean productFound = false;
         
@@ -582,14 +551,33 @@ public static void placeNewOrder() {
         }
     }
     
+    
+     
     newOrder.setTotal_price(totalAmount);
     
+    
     System.out.print("Date (dd/MM/yyyy): ");
-    newOrder.setDate(input.next());
+    String dateInput = input.next();
+    try {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    LocalDate orderDate = LocalDate.parse(dateInput, formatter);
+    newOrder.setDate(orderDate);
+} catch (Exception e) {
+    System.out.println("Invalid date format. Using today's date.");
+    newOrder.setDate(LocalDate.now());
+}
     
-    System.out.print("Status: ");
-    newOrder.setStatus(input.next());
     
+ System.out.print("Status (pending/shipped/delivered/cancelled): ");
+String statusInput = input.next().toLowerCase();
+
+while (!statusInput.equals("pending") && !statusInput.equals("shipped") && 
+       !statusInput.equals("delivered") && !statusInput.equals("cancelled")) {
+    System.out.print("Invalid status. Enter (pending/shipped/delivered/cancelled): ");
+    statusInput = input.next().toLowerCase();
+}
+    newOrder.setStatus(statusInput);  
+
     orders.insert(newOrder);
     
     if (!customer.empty()) {
@@ -598,19 +586,70 @@ public static void placeNewOrder() {
         int idx = 0;
         while (idx < customer.size()) {
             
-            if (customer.retrieve().getCustomerID() == customerId) {
-                customer.retrieve().PlaceNew(id);
-                break;
-            }
+         if (customer.retrieve().getCustomerID() == customerId) {
+    Customers c = customer.retrieve();
+    customer.remove();
+    c.PlaceNew(id);
+    customer.insert(c);
+    break;
+}
             
             customer.findNext();
             idx++;
         }
     }
     
-    System.out.println("\nOrder added successfully");
-    System.out.println(orders.retrieve());
+    System.out.println("\nOrder added successfully");  System.out.println("Order had been added ");
+            System.out.println(orders.retrieve());
+    }
+    
+/**
+ * Update order status
+ */
+private static void updateOrderStatus() {
+    System.out.print("\n→ Enter Order ID: ");
+    int orderId = input.nextInt();
+    
+    boolean updated = odata.UpdateOrder(orderId);
+    
+    if (updated) {
+        System.out.println("\n Order status modified successfully.");
+    } else {
+        System.out.println("\n Unable to modify order status.");
+    }
 }
+
+
+/**
+ * Find orders within date range
+ */
+private static void findOrdersInDateRange() {
+    System.out.println("\n Date Format: dd/MM/yyyy");
+    
+    System.out.print(" Enter start date: ");
+    String startDate = input.next();
+    
+    System.out.print(" Enter end date: ");
+    String endDate = input.next();
+    
+    try {
+        System.out.println("\n" + "─".repeat(50));
+        System.out.println("Orders from " + startDate + " to " + endDate + ":");
+        System.out.println("─".repeat(50));
+        
+        LinkedList<Order> filteredOrders = odata.BetweenTwoDates(startDate, endDate);
+        
+        if (filteredOrders.empty()) {
+            System.out.println("No orders found in this date range.");
+        }
+        
+        System.out.println("─".repeat(50));
+        
+    } catch (Exception e) {
+        System.out.println("Invalid date format. Please use dd/MM/yyyy");
+    }
+}
+
 // 
  public static void CustomersMenu() {
     int choice;

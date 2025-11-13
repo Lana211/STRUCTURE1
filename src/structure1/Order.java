@@ -1,17 +1,14 @@
-
 package structure1;
 
-
-import java.util.Date;
-
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Order {
     int oId;
     int customerRef;
     LinkedList <Integer> products = new LinkedList <Integer> ();  
     double total_price;
-    String date;
+    LocalDate date;
     String status; 
 
     public Order() {
@@ -19,23 +16,24 @@ public class Order {
         this.customerRef = 0;
         this.total_price = 0;
         this.status = "";
-        this.date = "";
-
+        this.date = LocalDate.now();
     }
 
     public Order(int oId, int customerRef, Integer [] pids, double total_price, String date, String status) {
         this.oId = oId;
         this.customerRef = customerRef;
         this.total_price = total_price;
-        this.date = date ;
-        this.status = status;
         
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.date = LocalDate.parse(date, formatter);
+        
+        this.status = status;
         
         int i = 0;
         while (i < pids.length) {
-        this.products.insert(pids[i]);
-        i++;
-}
+            this.products.insert(pids[i]);
+            i++;
+        }
     }
 
     public int getoId() {
@@ -54,7 +52,7 @@ public class Order {
         return total_price;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -78,43 +76,41 @@ public class Order {
         this.total_price = total_price;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
+    }
+    
+    public void setDate(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        this.date = LocalDate.parse(dateStr, formatter);
     }
 
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public void addProduct (Integer product )
-    {
+    public void addProduct (Integer product) {
         products.insert(product);
     }
 
-    public boolean deleteProduct( Integer P)
-    {
-        if ( ! products.empty())
-        {
+    public boolean deleteProduct(Integer P) {
+        if (!products.empty()) {
             products.findFirst();
-            while(! products.last())
-            {
-                if (products.retrieve() == P)
-                {
+            while(!products.last()) {
+                if (products.retrieve() == P) {
                     products.remove();
                     return true;
                 }
                 else
                     products.findNext();
             }
-            if (products.retrieve() == P)
-            {
+            if (products.retrieve() == P) {
                 products.remove();
                 return true;
             }
         }
         return false;
     }
-    
    
     @Override
     public String toString() {
@@ -123,12 +119,10 @@ public class Order {
                 + ",total price=" + total_price 
                 + " , status =" + status
                 + ", date =" + date;
-        if ( ! products.empty())
-        {
+        if (!products.empty()) {
             str += "(products List" ;
             products.findFirst();
-            while(! products.last())
-            {
+            while(!products.last()) {
                 str += products.retrieve() + " ";
                 products.findNext();
             }
@@ -137,6 +131,4 @@ public class Order {
         str +=  " }";
         return str;        
     }
-    
-
 }

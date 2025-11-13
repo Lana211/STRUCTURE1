@@ -1,82 +1,65 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package structure1;
 
-/**
- *
- * @author 96650
- */
-
 import java.io.File;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-
 
 public class ordersManager {
     
-    public static Scanner input = new Scanner (System.in);
-    public static LinkedList<Order> orders = new LinkedList<Order> ();
+    public static Scanner input = new Scanner(System.in);
+    public static LinkedList<Order> orders = new LinkedList<Order>();
     
 //==============================================================
-    public LinkedList<Order>  getordersData ( )
-    {
+    public LinkedList<Order> getordersData() {
         return orders;
     }
     
 //==============================================================
-    public ordersManager ( String fName)
-    {
-        try{
-                File docsfile = new File(fName);
-                Scanner reader = new Scanner (docsfile);
-                String line = reader.nextLine(); //header of data
+    public ordersManager(String fName) {
+        try {
+            File docsfile = new File(fName);
+            Scanner reader = new Scanner(docsfile);
+            String line = reader.nextLine();
+            
+            while(reader.hasNext()) {
+                line = reader.nextLine();
+                String [] data = line.split(","); 
+                int oid = Integer.parseInt(data[0]);
+                int cid = Integer.parseInt(data[1]);
                 
-                while(reader.hasNext())
-                {
-                    line = reader.nextLine();
-                    String [] data = line.split(","); 
-                    int oid = Integer.parseInt(data[0]);
-                    int cid = Integer.parseInt(data[1]);
-                    
-                    String  pp =  data[2].replaceAll("\"", "");
-                    String [] p = pp.split(";");
-                    Integer [] pids = new Integer [p.length];
-                 
-                    int i = 0;
-                    while (i < pids.length) {
-                        pids[i] = Integer.parseInt(p[i].trim()); //cheack
-                        i++;
-                    }
-                    double price = Double.parseDouble(data[3]);
-                    String date = data[4];
-                    String status = data[5];
-                            
-                    Order order = new Order(oid, cid, pids, price, date, status );
-                    orders.insert(order);
-                    
+                String pp = data[2].replaceAll("\"", "");
+                String [] p = pp.split(";");
+                Integer [] pids = new Integer [p.length];
+             
+                int i = 0;
+                while (i < pids.length) {
+                    pids[i] = Integer.parseInt(p[i].trim());
+                    i++;
                 }
-                reader.close();
+                double price = Double.parseDouble(data[3]);
+                String date = data[4];
+                String status = data[5];
+                        
+                Order order = new Order(oid, cid, pids, price, date, status);
+                orders.insert(order);
             }
-            catch (Exception ex) {
-                System.out.println(ex.getMessage());
-            }
-     }
+            reader.close();
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     //==============================================================
-    public int cancelOrder (int oid)
-    {
+    public int cancelOrder(int oid) {
         orders.findFirst();
         int i = 0;
-        while (i < orders.size())
-        {
-            if ( orders.retrieve().getoId() == oid )
-            {
-                if (orders.retrieve().status.compareToIgnoreCase("cancelled") == 0)
-                {
+        while (i < orders.size()) {
+            if (orders.retrieve().getoId() == oid) {
+                if (orders.retrieve().status.compareToIgnoreCase("cancelled") == 0) {
                     System.out.println("Order " + orders.retrieve().getoId() + " was cancelled before");
-                    return 2; // canceled before 
+                    return 2;
                 }
                     
                 Order ordera = orders.retrieve(); 
@@ -89,131 +72,114 @@ public class ordersManager {
             
             i++;
         }
-        return 0; // not found order
+        return 0;
     }
     
     //==============================================================
-    public boolean UpdateOrder( int orderID)
-    {
-         boolean found = false;
-        orders.findFirst();
-        while (!orders.last())
-        {
-            if (orders.retrieve().getoId()== orderID)
-            {
-                found = true;
-                break;
-            }
-            orders.findNext();
-        }
-        if (orders.retrieve().getoId()== orderID)
+ public boolean UpdateOrder(int orderID) {
+    boolean found = false;
+    orders.findFirst();
+    while (!orders.last()) {
+        if (orders.retrieve().getoId() == orderID) {
             found = true;
-
-        if (found )
-        {
-            if ( orders.retrieve().getStatus().compareToIgnoreCase("cancelled") == 0)
-            {
-                System.out.println("Cannot update status for cancelled orders");
-                return false;
-            }
-             else
-            {
-                Order obj = orders.retrieve();
-
-                System.out.println("Status of order is " + orders.retrieve().getStatus() );
-                System.out.print("Please enter new status (pending/shipped/delivered/cancelled): ");
-                String str = input.next();
-                orders.remove();//cheack
-                obj.status = str;
-                orders.insert(obj);
-                return true;
-            }
+            break;
         }
-                System.out.println("Invalid order ID");
-                return false;
+        orders.findNext();
     }
-    
+    if (orders.retrieve().getoId() == orderID)
+        found = true;
+        
+    if (found) {
+        if (orders.retrieve().getStatus().compareToIgnoreCase("cancelled") == 0) {
+            System.out.println("Cannot update status for cancelled orders");
+            return false;
+        }
+        else {
+            Order obj = orders.retrieve();
+            System.out.println("Status of order is " + orders.retrieve().getStatus());
+            System.out.print("Please enter new status (pending/shipped/delivered/cancelled): ");
+            String str = input.next().toLowerCase();
+            
+            while (!str.equals("pending") && !str.equals("shipped") && 
+                   !str.equals("delivered") && !str.equals("cancelled")) {
+                System.out.print("Invalid status. Enter (pending/shipped/delivered/cancelled): ");
+                str = input.next().toLowerCase();
+            }
+            
+            orders.remove();
+            obj.status = str;
+            orders.insert(obj);
+            return true;
+        }
+    }
+    System.out.println("Invalid order ID");
+    return false;
+}
     //==================================================================    
-    public Order searchOrderID(int orderID)
-    {
+    public Order searchOrderID(int orderID) {
         boolean found = false;
 
         orders.findFirst();
-        while (!orders.last())
-        {
-            if (orders.retrieve().getoId()== orderID)
-            {
+        while (!orders.last()) {
+            if (orders.retrieve().getoId() == orderID) {
                 found = true;
                 break;
             }
             orders.findNext();
         }
-        if (orders.retrieve().getoId()== orderID)
+        if (orders.retrieve().getoId() == orderID)
             found = true;
 
-        if (found )
+        if (found)
             return orders.retrieve();
 
-     System.out.println("Invalid order ID");
+        System.out.println("Invalid order ID");
         return null;
     }
 
     //==================================================================    
-   public LinkedList<Order> BetweenTwoDates(String date1, String date2)
-{
-    LinkedList<Order> ordersbetweenDates =  new LinkedList<Order>();
-    
-    if (! orders.empty())
-    {
-        orders.findFirst();
+    public LinkedList<Order> BetweenTwoDates(String date1, String date2) {
+        LinkedList<Order> ordersbetweenDates = new LinkedList<Order>();
         
-        for ( int i = 0 ; i < orders.size() ; i++)
-        {
-            String orderDate = orders.retrieve().getDate();
-            
-            if (isDateInRange(orderDate, date1, date2))
-            {
-                ordersbetweenDates.insert(orders.retrieve());
-                System.out.println(orders.retrieve());
-            }
-           orders.findNext();
-        }
-    }
-    return ordersbetweenDates;
-}
-
-        private boolean isDateInRange(String date, String start, String end) {
-            int dateNum = convertDateToNumber(date);
-            int startNum = convertDateToNumber(start);
-            int endNum = convertDateToNumber(end);
-
-            return dateNum >= startNum && dateNum <= endNum;
-        }
-
-        // Convert dd/MM/yyyy to yyyyMMdd for comparison
-        private int convertDateToNumber(String date) {
-            String[] parts = date.split("/");
-            int day = Integer.parseInt(parts[0]);
-            int month = Integer.parseInt(parts[1]);
-            int year = Integer.parseInt(parts[2]);
-
-            return year * 10000 + month * 100 + day;
-        }
-    //==================================================================    
-    public boolean Checkorderid(int oid)
-    {
-        if (!orders.empty())
-        {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate Ldate1 = LocalDate.parse(date1, formatter);
+        LocalDate Ldate2 = LocalDate.parse(date2, formatter);
+        
+        if (!orders.empty()) {
             orders.findFirst();
-            while (!orders.last())
-            {
-                if (orders.retrieve().getoId()== oid)
-                    return true;
+            
+            for (int i = 0; i < orders.size(); i++) {
+                if (orders.retrieve().getDate().isAfter(Ldate1) && 
+                    orders.retrieve().getDate().isBefore(Ldate2)) {
+                    ordersbetweenDates.insert(orders.retrieve());
+                    System.out.println(orders.retrieve());
+                }
                 orders.findNext();
             }
-            if (orders.retrieve().getoId()== oid)
-                return true;
         }
+        return ordersbetweenDates;
+    }
+    
+    //==================================================================    
+    public boolean Checkorderid(int oid) {
+        if (orders.empty()) {
+            return false;
+        }
+        
+        orders.findFirst();
+        int i = 0;
+        while (i < orders.size()) {
+            if (orders.retrieve().getoId() == oid) {
+                orders.findFirst();
+                return true;
+            }
+            if (!orders.last()) {
+                orders.findNext();
+            }
+            i++;
+        }
+        
+        orders.findFirst();
         return false;
     }
 }
