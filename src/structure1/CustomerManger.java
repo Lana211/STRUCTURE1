@@ -57,7 +57,7 @@ customers.setCustomerID(customerID);
    customers.setEmail(email);
    
     customer.insert(customers);
-   
+     System.out.println("Customer has been added successfully");  
 }
 
     public void Ohistory() {
