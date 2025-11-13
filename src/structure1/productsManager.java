@@ -41,36 +41,36 @@ public class productsManager {
 
    
     public void addProduct() {
-        System.out.println("Enter product ID:");
-        int pId = input.nextInt();
-        while (checkProductID(pId)) {
-           System.out.println("This product ID is already taken. Please enter another one:");
-            pId = input.nextInt();
+        System.out.println("Enter product ID:"); //1
+        int pId = input.nextInt(); //2
+        while (checkProductID(pId)) { //3
+           System.out.println("This product ID is already taken. Please enter another one:");//4
+            pId = input.nextInt();//5
         }
 
-        System.out.println("Enter product Name:");
-        String name = input.next();
+        System.out.println("Enter product Name:");//6
+        String name = input.next();//7
 
         
-        System.out.println("price:");
-        double price = input.nextDouble();
-        while (price < 0) {
-           System.out.println("Invalid price. Please enter a non-negative value:");
-            price = input.nextDouble();
+        System.out.println("price:");//8
+        double price = input.nextDouble();//9
+        while (price < 0) {//10
+           System.out.println("Invalid price. Please enter a non-negative value:");//11
+            price = input.nextDouble();//12
         }
 
        
-        System.out.println("stock:");
-        int stock = input.nextInt();
-        while (stock < 0) {
-            System.out.println("Invalid stock value. Please enter a non-negative number:");
-            stock = input.nextInt();
+        System.out.println("stock:");//13
+        int stock = input.nextInt();///14
+        while (stock < 0) {//15
+            System.out.println("Invalid stock value. Please enter a non-negative number:");//16
+            stock = input.nextInt();//17
         }
 
-        Product product = new Product(pId, name, price, stock);
-        products.findFirst();
-        products.insert(product);
-        System.out.println("Product '" + name + "' with ID " + pId + " has been added successfully.");
+        Product product = new Product(pId, name, price, stock);//18
+        products.findFirst();//19
+        products.insert(product);//20
+        System.out.println("Product '" + name + "' with ID " + pId + " has been added successfully.");//21
     }
 
     
