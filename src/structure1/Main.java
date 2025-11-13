@@ -630,7 +630,7 @@ public static void placeNewOrder() {
     System.out.print("Customer ID: ");
     int customerId = input.nextInt();
     
-    while (!cdata.check(customerId)) {
+    while (cdata.check(customerId)) {
         System.out.print("Customer doesn't exist, re-enter: ");
         customerId = input.nextInt();
     }
@@ -741,7 +741,7 @@ public static void placeNewOrder() {
                cdata.RegisterNewCustomer();
                 break;
             } else if (choice == 2) {
-                PlaceOrder();
+                placeNewOrder();
                 break;
             } else if (choice == 3) {
              cdata.Ohistory ();
