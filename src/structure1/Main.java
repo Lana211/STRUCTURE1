@@ -744,44 +744,50 @@ public static LinkedList<Review> allCustomereviews(){
 
     
 //-------------------------
-   public static void main(String[] args) {
+  public static void main(String[] args) {
     
     loadData();
     
-    int choice;
-    
+    int choice = 0;
     
     do {
-       
-        System.out.println("ـــــــــــــ");
-        System.out.println("1. Products");
-        System.out.println("2. Customers");
-        System.out.println("3. Orders");
-        System.out.println("4. Reviews");
-        System.out.println("5. Exit");
-        System.out.println("Enter your choice:");
-        choice = input.nextInt();
-
-        
-        switch (choice) {
-            case 1:
-                productsMenu();  
-                break;
-            case 2:
-                CustomersMenu();  
-                break;
-            case 3:
-                OrdersMenu();  
-                break;
-            case 4:
-                ReviewsMenu();  
-                break;
-            case 5:
-                break;  
-            default:
-                System.out.println("Bad choice, Try again");
+        try {
+            System.out.println("ـــــــــــــ");
+            System.out.println("1. Products");
+            System.out.println("2. Customers");
+            System.out.println("3. Orders");
+            System.out.println("4. Reviews");
+            System.out.println("5. Exit");
+            System.out.println("Enter your choice:");
+            choice = input.nextInt();
+            
+            switch (choice) {
+                case 1:
+                    productsMenu();  
+                    break;
+                case 2:
+                    CustomersMenu();  
+                    break;
+                case 3:
+                    OrdersMenu();  
+                    break;
+                case 4:
+                    ReviewsMenu();  
+                    break;
+                case 5:
+                    System.out.println("Exiting... Goodbye!");
+                    break;  
+                default:
+                    System.out.println("Bad choice, Try again");
+            }
+            
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Invalid input! Please enter a number between 1-5.");
+            input.nextLine();  
+            choice = 0;  
         }
-    } while (choice != 5);  
+        
+    } while (choice != 5);
 }
   }
 
