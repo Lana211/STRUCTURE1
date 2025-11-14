@@ -40,38 +40,62 @@ public class productsManager {
     }
 
    
-    public void addProduct() {
-        System.out.println("Enter product ID:"); //1
-        int pId = input.nextInt(); //2
-        while (checkProductID(pId)) { //3
-           System.out.println("This product ID is already taken. Please enter another one:");//4
-            pId = input.nextInt();//5
+        public void addProduct() {
+        System.out.println("Enter product ID:");
+        int pId = input.nextInt();
+        while (checkProductID(pId)) {
+            System.out.println("This product ID is already taken. Please enter another one:");
+            pId = input.nextInt();
         }
 
-        System.out.println("Enter product Name:");//6
-        String name = input.next();//7
+        System.out.println("Enter product name:");
+        String name = input.next();
 
-        
-        System.out.println("price:");//8
-        double price = input.nextDouble();//9
-        while (price < 0) {//10
-           System.out.println("Invalid price. Please enter a non-negative value:");//11
-            price = input.nextDouble();//12
+        // ---------- price ----------
+        double price = 0;
+        boolean validPrice = false;
+
+        while (!validPrice) {
+            System.out.println("Price:");
+            try {
+                price = input.nextDouble();
+                if (price < 0) {
+                    System.out.println("Invalid price. Please enter a non-negative value:");
+                } else {
+                    validPrice = true;
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Invalid price. Please enter a numeric value:");
+                input.nextLine();
+            }
         }
 
-       
-        System.out.println("stock:");//13
-        int stock = input.nextInt();///14
-        while (stock < 0) {//15
-            System.out.println("Invalid stock value. Please enter a non-negative number:");//16
-            stock = input.nextInt();//17
+        // ---------- stock ----------
+        int stock = 0;
+        boolean validStock = false;
+
+        while (!validStock) {
+            System.out.println("Stock:");
+            try {
+                stock = input.nextInt();
+                if (stock < 0) {
+                    System.out.println("Invalid stock value. Please enter a non-negative number:");
+                } else {
+                    validStock = true;
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Invalid stock value. Please enter a numeric value:");
+                input.nextLine();
+            }
         }
 
-        Product product = new Product(pId, name, price, stock);//18
-        products.findFirst();//19
-        products.insert(product);//20
-        System.out.println("Product '" + name + "' with ID " + pId + " has been added successfully.");//21
+        Product product = new Product(pId, name, price, stock);
+        products.findFirst();
+        products.insert(product);
+        System.out.println("Product '" + name + "' with ID " + pId + " has been added successfully.");
     }
+
+   
 
     
     public Product searchProducID() {
@@ -269,18 +293,7 @@ public class productsManager {
     }
 }
 
-    /*public void Out_Of_Stock_Products() {
-        if (products.empty()) {
-            System.out.println("empty Products data");
-        } else {
-            products.findFirst();
-            for (int i = 0; i < products.size(); i++) {
-                if (products.retrieve().getStock() == 0)
-                    System.out.println(products.retrieve());
-                products.findNext();
-            }
-        }
-    }*/
+   
 
     //========================================================added method 
     public boolean checkProductID(int PID) {
