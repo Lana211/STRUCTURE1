@@ -40,7 +40,7 @@ public class productsManager {
     }
 
    
-        public void addProduct() {
+        public void addProduct() {// 14 Nov
         System.out.println("Enter product ID:");
         int pId = input.nextInt();
         while (checkProductID(pId)) {

@@ -222,7 +222,7 @@ public class Main {
     public static void addReviewPrompt() {
         System.out.print("Enter the Customer ID: ");
         int customerId = input.nextInt();
-        while (!cdata.check(customerId)) {// updated (check)
+        while (cdata.check(customerId)) {// updated (check)
             System.out.println("Customer ID not available. Please enter again:");
             customerId = input.nextInt();
         }
