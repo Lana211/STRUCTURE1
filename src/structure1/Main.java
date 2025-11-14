@@ -422,7 +422,7 @@ private static void searchForOrder() {
  */
 
 private static void cancelAnOrder() {
-    System.out.print("\n→ Order ID to cancel: ");
+    System.out.print("\n Order ID to cancel: ");
     int orderID = input.nextInt();
     
     Order orderToCancel = odata.searchOrderID(orderID);
