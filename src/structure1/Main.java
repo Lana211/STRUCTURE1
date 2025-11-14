@@ -509,13 +509,26 @@ private static void cancelAnOrder() {
     boolean addingProducts = true;
     
     while (addingProducts) {
-        System.out.print("Product ID: ");
-        int productId = input.nextInt();
-        
-        while (!pdata.checkProductID(productId)) {
-        System.out.print("Product ID: ");
-         productId = input.nextInt();
-        }
+       System.out.print("Product ID: ");
+int productId = input.nextInt();
+
+while (true) {
+    if (!pdata.checkProductID(productId)) {
+        System.out.print("Invalid Product ID. Enter again: ");
+        productId = input.nextInt();
+        continue;
+    }
+    
+    Product p = pdata.getProducts(productId);
+    if (p.getStock() == 0) {
+        System.out.println("This product is out of stock!");
+        System.out.print("Enter another Product ID: ");
+        productId = input.nextInt();
+        continue;
+    }
+    
+    break;
+}
         
         boolean productFound = false;
         
