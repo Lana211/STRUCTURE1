@@ -132,8 +132,9 @@ public class productsManager {
         System.out.println("empty Products data");
     } else {
         System.out.println("Enter product Name: ");
+        //input.nextLine();//
         String name = input.nextLine();
-        //name = input.nextLine(); //
+         
         
         boolean found = false;
         
@@ -156,6 +157,9 @@ public class productsManager {
     System.out.println("No such product Name");
     return null;
 }
+    
+  
+
 
 
       

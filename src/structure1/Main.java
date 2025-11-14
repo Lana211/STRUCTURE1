@@ -130,6 +130,8 @@ public class Main {
                 }
                 break;
             } else if (choice == 5) {
+                
+               input.nextLine(); 
                Product pro = pdata.searchProducName();
                 if (pro != null) {
                     System.out.println("Product found: " + pro);
