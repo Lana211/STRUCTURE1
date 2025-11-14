@@ -31,7 +31,7 @@ public class Customers{
       order.insert(o);
     }
 
-    public boolean removeOrder(Integer o) {
+    /*public boolean removeOrder(Integer o) {
         if (!order.empty()) {
             order.findFirst();
             while (!order.last()) {
@@ -54,7 +54,25 @@ public class Customers{
        
         
 
+    }*/
+    public boolean removeOrder(Integer o) {
+    if (!order.empty()) {
+        order.findFirst();
+        while (!order.last()) {
+            if (order.retrieve().equals(o)) { 
+                order.remove();
+                return true;
+            }
+            order.findNext();
+        }
+     
+        if (order.retrieve().equals(o)) {
+            order.remove();
+            return true;
+        }
     }
+    return false;
+}
     
 
     public int getCustomerID() {
