@@ -344,7 +344,7 @@ public class Main {
     }
 
 
-    public static void OrdersMenu() {
+     public static void OrdersMenu() {
     System.out.println("ــــــــــ Order Menu ــــــــ");
     System.out.println("(1) Search for an Order");
     System.out.println("(2) Cancel an Order");
@@ -357,38 +357,53 @@ System.out.println("(6) Return to Main Menu");
     try {
         int opt = input.nextInt();
         
-        // Using nested if-else (different from teammate's while loop style)
+        while(true){
         if (opt == 1){
-            searchForOrder();
+            searchForOrder();   
+            break;
+
         } 
         else if (opt == 2) {
             cancelAnOrder();
+            break;
+
         } 
         else if (opt == 3) {
             updateOrderStatus();
+                                break;
+
         } 
         else if (opt == 4) {
             findOrdersInDateRange();
+                                break;
+
         } 
         else if (opt == 5) {
     placeNewOrder();
+                        break;
+
 }
         else if (opt == 6) {
-            System.out.println("→ Going back to main menu...\n");
-            ReviewsMenu();
+            System.out.println(" Going back to main menu...\n");
+                                break;
+
+          
         } 
         else {
-            System.out.println("⚠ Invalid option! Please choose 1-5.");
+            System.out.println("Invalid option! Please choose 1-5.");
+                                break;
+
         }
         
-    } catch (java.util.InputMismatchException e) {
+    }
+    }catch (java.util.InputMismatchException e) {
         System.out.println("Invalid input! Please enter a valid number.");
-        input.nextLine();  // Clear the invalid input from the buffer
+        input.nextLine();  
     }
 }
 
 private static void searchForOrder() {
-    System.out.print("\n→ Enter Order ID: ");
+    System.out.print("\n Enter Order ID: ");
     int orderId = input.nextInt();
     
     Order foundOrder = odata.searchOrderID(orderId);
@@ -621,7 +636,7 @@ private static void updateOrderStatus() {
 
 
 /**
- * Find orders within date range
+ * find orders within date range
  */
 private static void findOrdersInDateRange() {
     System.out.println("\n Date Format: dd/MM/yyyy");
